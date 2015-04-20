@@ -24,9 +24,25 @@
       (om/transact! cursor #(merge % diff))
       (recur))))
 
+(defn channel-input-handler
+  [ch]
+  (fn [e]
+    (async/put! ch (.. e -target -value))))
+
 (defn search-view
   [data owner]
   (reify
+    om/IInitState
+    (init-state [_]
+      (let [text-input (z/write-port (:text data))]
+        {:text-input-handler (channel-input-handler text-input)
+         :signal             (z/map (fn [text] {:text text})
+                                    text-input)}))
+    om/IWillMount
+    (will-mount [_]
+      (->> (om/get-state owner :signal)
+           (z/to-chan)
+           (merge-channel-values-into-cursor! data)))
     om/IRenderState
     (render-state [_ state]
       (html
@@ -35,12 +51,14 @@
          [:div.col-md-4
           [:label {:for "search-input"}
            "Search Wikipedia"]
-          [:input {:class "form-control"
-                   :name  "search-input"
-                   :type  "text"}]
+          [:input {:class     "form-control"
+                   :name      "search-input"
+                   :type      "text"
+                   :value     (:text data)
+                   :on-change (:text-input-handler state)}]
           [:ul.list-unstyled
            (for [n (range 10)]
-             [:li (str "suggestion " n)])]]
+             [:li (str (:text data) " " n)])]]
          [:div.col-md-4]]))))
 
 (defonce app-state (atom {:text "" :suggestions []}))
