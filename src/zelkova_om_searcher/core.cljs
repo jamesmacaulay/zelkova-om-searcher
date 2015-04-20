@@ -45,11 +45,9 @@
       (let [text-input (z/write-port (:text data))
             suggestions (suggestions-signal text-input)]
         {:text-input-handler (channel-input-handler text-input)
-         :signal             (z/map (fn [text article-titles]
-                                      {:text text
-                                       :suggestions article-titles})
-                                    text-input
-                                    suggestions)}))
+         :signal             (z/indexed-updates
+                               {:text text-input
+                                :suggestions suggestions})}))
     om/IWillMount
     (will-mount [_]
       (->> (om/get-state owner :signal)
