@@ -32,8 +32,9 @@
 (defn suggestions-signal
   [text-input]
   (->> text-input
+       (time/debounce 200)
        (z/map search-request)
-       (jsonp/fetch-responses)
+       (jsonp/fetch-responses-drop-stale)
        (z/map second)))
 
 (defn search-view

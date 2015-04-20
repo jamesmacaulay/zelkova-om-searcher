@@ -25,7 +25,17 @@
             (constantly {})
             requests))
 
-
+(defn fetch-responses-drop-stale
+  [requests]
+  (->> requests
+       (fetch-responses)
+       (z/map vector requests)
+       (z/keep-if (fn [[latest-request response]]
+                    (-> response
+                        meta
+                        :request
+                        (= latest-request))))
+       (z/map second)))
 
 
 
