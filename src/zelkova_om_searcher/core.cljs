@@ -29,15 +29,26 @@
   (fn [e]
     (async/put! ch (.. e -target -value))))
 
+(defn suggestions-signal
+  [text-input]
+  (->> text-input
+       (z/map search-request)
+       (jsonp/fetch-responses)
+       (z/map second)))
+
 (defn search-view
   [data owner]
   (reify
     om/IInitState
     (init-state [_]
-      (let [text-input (z/write-port (:text data))]
+      (let [text-input (z/write-port (:text data))
+            suggestions (suggestions-signal text-input)]
         {:text-input-handler (channel-input-handler text-input)
-         :signal             (z/map (fn [text] {:text text})
-                                    text-input)}))
+         :signal             (z/map (fn [text article-titles]
+                                      {:text text
+                                       :suggestions article-titles})
+                                    text-input
+                                    suggestions)}))
     om/IWillMount
     (will-mount [_]
       (->> (om/get-state owner :signal)
@@ -57,8 +68,8 @@
                    :value     (:text data)
                    :on-change (:text-input-handler state)}]
           [:ul.list-unstyled
-           (for [n (range 10)]
-             [:li (str (:text data) " " n)])]]
+           (for [title (:suggestions data)]
+             [:li {:key title} title])]]
          [:div.col-md-4]]))))
 
 (defonce app-state (atom {:text "" :suggestions []}))
