@@ -1,4 +1,5 @@
 /resources/public/js/compiled/**
+!/resources/public/js/compiled/zelkova_om_searcher.js
 figwheel_server.log
 pom.xml
 *jar
