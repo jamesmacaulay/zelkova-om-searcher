@@ -1,4 +1,4 @@
-(ns zelkova-om-searcher.jsonp
+(ns zelkova-searcher.jsonp
   (:require [cljs.core.async :as async :refer [>! <!]]
             [jamesmacaulay.zelkova.signal :as z]
             [goog.net.Jsonp]

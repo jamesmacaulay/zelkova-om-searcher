@@ -1,4 +1,4 @@
-(defproject zelkova-om-searcher "0.1.0-SNAPSHOT"
+(defproject zelkova-searcher "0.1.0-SNAPSHOT"
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -11,8 +11,8 @@
                  [jamesmacaulay/zelkova "0.4.0-SNAPSHOT" :exclusions [org.clojure/clojure
                                                                       org.clojure/clojurescript
                                                                       org.clojure/core.async]]
-                 [sablono "0.3.4"]
-                 [org.omcljs/om "0.8.8"]]
+                 [reagent "0.5.0" :exclusions [org.clojure/clojure
+                                               org.clojure/clojurescript]]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-figwheel "0.2.5-SNAPSHOT"]]
@@ -24,18 +24,18 @@
   :cljsbuild {
     :builds [{:id "dev"
               :source-paths ["src" "dev_src"]
-              :compiler {:output-to "resources/public/js/compiled/zelkova_om_searcher.js"
+              :compiler {:output-to "resources/public/js/compiled/zelkova_searcher.js"
                          :output-dir "resources/public/js/compiled/out"
                          :optimizations :none
-                         :main zelkova-om-searcher.dev
+                         :main zelkova-searcher.dev
                          :asset-path "js/compiled/out"
                          :source-map true
                          :source-map-timestamp true
                          :cache-analysis true }}
              {:id "min"
               :source-paths ["src"]
-              :compiler {:output-to "resources/public/js/compiled/zelkova_om_searcher.js"
-                         :main zelkova-om-searcher.core                         
+              :compiler {:output-to "resources/public/js/compiled/zelkova_searcher.js"
+                         :main zelkova-searcher.core
                          :optimizations :advanced
                          :pretty-print false}}]}
 

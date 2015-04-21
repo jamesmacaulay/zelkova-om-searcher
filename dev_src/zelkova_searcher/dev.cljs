@@ -1,6 +1,6 @@
-(ns zelkova-om-searcher.dev
+(ns zelkova-searcher.dev
     (:require
-     [zelkova-om-searcher.core]
+     [zelkova-searcher.core]
      [figwheel.client :as fw]))
 
 (fw/start {
